@@ -3,6 +3,11 @@ name = "lordeckcodes-rs"
 version = "0.1.0"
 authors = ["Iulian Gabriel Radu <iulian.radu67@gmail.com>"]
 edition = "2018"
+license = "MIT"
+readme = "README.md"
+keywords = ["encoder", "decoder", "riot games", "runeterra", "legends of runeterra"]
+categories = ["encoding"]
+maintenance = { status = "actively-developed" }
 
 [dependencies]
 data-encoding = "2.1.2"
