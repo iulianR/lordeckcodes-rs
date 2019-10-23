@@ -17,7 +17,7 @@ lordeckcodes = "0.1"
 ## Examples
  Obtain a deck from the provided code:
 
- ```
+ ```rust
  use lordeckcodes::Encoder;
 
  let deck = Encoder::deck_from_code(
@@ -27,7 +27,7 @@ lordeckcodes = "0.1"
  ```
 
  Generate a code from the provided deck:
- ```
+ ```rust
  use lordeckcodes::Encoder;
  use lordeckcodes::CardCodeAndCount;
  use lordeckcodes::Deck;
