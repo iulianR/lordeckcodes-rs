@@ -7,11 +7,11 @@ Legends of Runeterra deck encoder/decoder in Rust. Port of [LorDeckCodes](https:
 
 ## Usage
 
-To use `lordeckcodes-rs`, add this to your `Cargo.toml`:
+To use `lordeckcodes`, add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-lordeckcodes-rs = "0.1"
+lordeckcodes = "0.1"
 ```
 
 ## Examples
