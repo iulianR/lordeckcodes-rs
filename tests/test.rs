@@ -1,9 +1,9 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-use lordeckcodes_rs::card::CardCodeAndCount;
-use lordeckcodes_rs::deck::Deck;
-use lordeckcodes_rs::encoder::Encoder;
+use lordeckcodes::CardCodeAndCount;
+use lordeckcodes::Deck;
+use lordeckcodes::Encoder;
 
 #[test]
 fn basic_decode_test() {
@@ -281,12 +281,12 @@ fn garbage_decoding() {
 }
 
 fn verify_rehydration(d: &Deck, other: &Deck) -> bool {
-    if d.cards.len() != other.cards.len() {
+    if d.cards().len() != other.cards().len() {
         return false;
     }
 
-    for card_count in &d.cards {
-        let res = other.cards.iter().find(|x| *x == card_count);
+    for card_count in d.cards() {
+        let res = other.cards().iter().find(|x| *x == card_count);
         if res.is_none() {
             return false;
         }
