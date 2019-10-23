@@ -44,6 +44,7 @@ impl Card {
     }
 }
 
+/// Stores card-related information.
 #[derive(Debug, PartialEq, Hash, Clone, Ord, PartialOrd, Eq)]
 pub struct CardCodeAndCount {
     pub(crate) card: Card,
@@ -55,6 +56,7 @@ impl CardCodeAndCount {
         CardCodeAndCount { card, count }
     }
 
+    /// Create a `CardCodeAndCount` from the provided data.
     pub fn from_data(code: &str, count: i32) -> Result<CardCodeAndCount, LorError> {
         if code.len() != 7 {
             return Err(LorError::InvalidCard);

@@ -1,5 +1,5 @@
 [package]
-name = "lordeckcodes-rs"
+name = "lordeckcodes"
 description = "Legends of Runeterra deck encoder/decoder"
 homepage = "https://github.com/iulianR/lordeckcodes-rs"
 repository = "https://github.com/iulianR/lordeckcodes-rs"
@@ -11,7 +11,6 @@ license = "MIT"
 readme = "README.md"
 keywords = ["encoder", "decoder", "riot-games", "runeterra", "legends-of-runeterra"]
 categories = ["encoding"]
-maintenance = { status = "actively-developed" }
 
 [dependencies]
 data-encoding = "2.1.2"

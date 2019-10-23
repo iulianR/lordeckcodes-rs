@@ -6,9 +6,23 @@ use crate::card::{Card, CardCodeAndCount};
 use crate::deck::Deck;
 use crate::error::LorError;
 
+/// Provides encode and decode API calls.
 pub struct Encoder;
 
 impl Encoder {
+    /// Creates a [`Deck`] from a provided code.
+    ///
+    /// [`Deck`]: struct.Deck.html
+    ///
+    /// # Examples
+    /// ```
+    /// use lordeckcodes::Encoder;
+    ///
+    /// let deck = Encoder::deck_from_code(
+    ///     String::from("CEBAEAIBAQTQMAIAAILSQLBNGUBACAIBFYDACAAHBEHR2IBLAEBACAIFAY")
+    /// );
+    /// assert!(deck.is_ok());
+    /// ```
     pub fn deck_from_code(code: String) -> Result<Deck, LorError> {
         let mut bytes = data_encoding::BASE32_NOPAD.decode(code.as_ref())?;
 
@@ -54,6 +68,36 @@ impl Encoder {
         Ok(Deck::from_vec(cards))
     }
 
+    /// Generate a code from the provided [`Deck`].
+    ///
+    /// [`Deck`]: struct.Deck.html
+    ///
+    /// # Examples
+    /// ```
+    /// use lordeckcodes::Encoder;
+    /// use lordeckcodes::CardCodeAndCount;
+    /// use lordeckcodes::Deck;
+    ///
+    /// let deck = Deck::from_vec(vec![
+    ///     CardCodeAndCount::from_data("01SI015", 3).unwrap(),
+    ///     CardCodeAndCount::from_data("01SI044", 3).unwrap(),
+    ///     CardCodeAndCount::from_data("01SI048", 3).unwrap(),
+    ///     CardCodeAndCount::from_data("01SI054", 3).unwrap(),
+    ///     CardCodeAndCount::from_data("01FR003", 3).unwrap(),
+    ///     CardCodeAndCount::from_data("01FR012", 3).unwrap(),
+    ///     CardCodeAndCount::from_data("01FR020", 3).unwrap(),
+    ///     CardCodeAndCount::from_data("01FR024", 3).unwrap(),
+    ///     CardCodeAndCount::from_data("01FR033", 3).unwrap(),
+    ///     CardCodeAndCount::from_data("01FR036", 3).unwrap(),
+    ///     CardCodeAndCount::from_data("01FR039", 3).unwrap(),
+    ///     CardCodeAndCount::from_data("01FR052", 3).unwrap(),
+    ///     CardCodeAndCount::from_data("01SI005", 2).unwrap(),
+    ///     CardCodeAndCount::from_data("01FR004", 2).unwrap(),
+    /// ]);
+    ///
+    /// let code = Encoder::code_from_deck(&deck);
+    /// assert!(code.is_ok());
+    /// ```
     pub fn code_from_deck(deck: &Deck) -> Result<String, LorError> {
         let mut bytes = vec![];
         bytes.push(0b0001_0001u8); // format and version
@@ -63,7 +107,7 @@ impl Encoder {
         let mut of1 = vec![];
         let mut ofn = vec![];
 
-        for card_code in &deck.cards {
+        for card_code in deck.cards() {
             match card_code.count {
                 3 => of3.push(card_code.clone()),
                 2 => of2.push(card_code.clone()),
