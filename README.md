@@ -1,6 +1,14 @@
 # Legends of Runeterra - Deck Encoder/Decoder
 Legends of Runeterra deck encoder/decoder in Rust. Port of [LorDeckCodes](https://github.com/RiotGames/LoRDeckCodes.).
 
+[![Crates.io][crates-badge]][crates-url]
+[![MIT licensed][mit-badge]][mit-url]
+
+[crates-badge]: https://img.shields.io/crates/v/lordeckcodes.svg
+[crates-url]: https://crates.io/crates/lordeckcodes
+[mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
+[mit-url]: LICENSE
+
 ## Documentation
 
 [API Documentation](https://docs.rs/lordeckcodes)
