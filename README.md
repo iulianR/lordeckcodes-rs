@@ -23,6 +23,15 @@ To use `lordeckcodes`, add this to your `Cargo.toml`:
 lordeckcodes = "0.1"
 ```
 
+## Serde support
+
+Serde support is optional and disabled by default. To enable use the feature `serde`.
+
+```toml
+[dependencies]
+lordeckcodes = { version = "0.1", features = ["serde"] }
+```
+
 ## Examples
  Obtain a deck from the provided code:
 

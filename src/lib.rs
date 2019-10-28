@@ -54,6 +54,5 @@ mod error;
 /// Provides encode and decode API calls.
 pub mod encoder;
 
-pub use self::deck::Deck;
 pub use self::card::CardCodeAndCount;
-
+pub use self::deck::Deck;

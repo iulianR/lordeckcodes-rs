@@ -1,8 +1,9 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-use lordeckcodes::{CardCodeAndCount, encoder};
 use lordeckcodes::Deck;
+use lordeckcodes::{encoder, CardCodeAndCount};
+use serde_json::Error;
 
 #[test]
 fn basic_decode_test() {
@@ -277,6 +278,36 @@ fn garbage_decoding() {
     assert!(encoder::deck_from_code(bad_encoding_not_base32).is_err());
     assert!(encoder::deck_from_code(bad_encoding32).is_err());
     assert!(encoder::deck_from_code(bad_encoding_empty).is_err());
+}
+
+#[test]
+fn deck_serialize_deserialize() {
+    let deck = Deck::from_vec(vec![
+        CardCodeAndCount::from_data("01SI015", 3).unwrap(),
+        CardCodeAndCount::from_data("01SI044", 3).unwrap(),
+        CardCodeAndCount::from_data("01SI048", 3).unwrap(),
+        CardCodeAndCount::from_data("01SI054", 3).unwrap(),
+        CardCodeAndCount::from_data("01FR003", 3).unwrap(),
+        CardCodeAndCount::from_data("01FR012", 3).unwrap(),
+        CardCodeAndCount::from_data("01FR020", 3).unwrap(),
+        CardCodeAndCount::from_data("01FR024", 3).unwrap(),
+        CardCodeAndCount::from_data("01FR033", 3).unwrap(),
+        CardCodeAndCount::from_data("01FR036", 3).unwrap(),
+        CardCodeAndCount::from_data("01FR039", 3).unwrap(),
+        CardCodeAndCount::from_data("01FR052", 3).unwrap(),
+        CardCodeAndCount::from_data("01SI005", 2).unwrap(),
+        CardCodeAndCount::from_data("01FR004", 2).unwrap(),
+    ]);
+    let deck_json = serde_json::to_string(&deck);
+    assert!(deck_json.is_ok());
+
+    let code = encoder::code_from_deck(&deck);
+    assert!(code.is_ok());
+
+    let deck_from_json: Result<Deck, Error> = serde_json::from_str(&deck_json.unwrap());
+    assert!(deck_from_json.is_ok());
+
+    assert!(verify_rehydration(&deck, &deck_from_json.unwrap()));
 }
 
 fn verify_rehydration(d: &Deck, other: &Deck) -> bool {

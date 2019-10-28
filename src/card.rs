@@ -1,3 +1,6 @@
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 use crate::error::LorError;
 use std::collections::HashMap;
 
@@ -14,6 +17,7 @@ lazy_static! {
     };
 }
 
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(PartialEq, Hash, Debug, Clone, Ord, PartialOrd, Eq)]
 pub struct Card {
     pub(crate) set: u32,
@@ -45,6 +49,7 @@ impl Card {
 }
 
 /// Stores card-related information.
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, PartialEq, Hash, Clone, Ord, PartialOrd, Eq)]
 pub struct CardCodeAndCount {
     pub(crate) card: Card,

@@ -1,3 +1,6 @@
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 use crate::card::{Card, CardCodeAndCount};
 use crate::error::LorError;
 
@@ -5,6 +8,7 @@ use crate::error::LorError;
 ///
 /// [`CardCodeAndCount`]: struct.CardCodeAndCount.html
 ///
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug)]
 pub struct Deck(Vec<CardCodeAndCount>);
 
