@@ -4,13 +4,14 @@ description = "Legends of Runeterra deck encoder/decoder"
 homepage = "https://github.com/iulianR/lordeckcodes-rs"
 repository = "https://github.com/iulianR/lordeckcodes-rs"
 documentation = "https://docs.rs/lordeckcodes"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Iulian Gabriel Radu <iulian.radu67@gmail.com>"]
 edition = "2018"
 license = "MIT"
 readme = "README.md"
 keywords = ["encoder", "decoder", "riot-games", "runeterra", "legends-of-runeterra"]
 categories = ["encoding"]
+publish = false
 
 [features]
 default = ["serde"]
