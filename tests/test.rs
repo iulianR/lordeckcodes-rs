@@ -1,13 +1,12 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-use lordeckcodes::CardCodeAndCount;
+use lordeckcodes::{CardCodeAndCount, encoder};
 use lordeckcodes::Deck;
-use lordeckcodes::Encoder;
 
 #[test]
 fn basic_decode_test() {
-    let deck = Encoder::deck_from_code(String::from(
+    let deck = encoder::deck_from_code(String::from(
         "CEBAEAIBAQTQMAIAAILSQLBNGUBACAIBFYDACAAHBEHR2IBLAEBACAIFAY",
     ));
     assert!(deck.is_ok());
@@ -31,7 +30,7 @@ fn basic_encode_test() {
         CardCodeAndCount::from_data("01SI005", 2).unwrap(),
         CardCodeAndCount::from_data("01FR004", 2).unwrap(),
     ];
-    let code = Encoder::code_from_deck(&Deck::from_vec(cards));
+    let code = encoder::code_from_deck(&Deck::from_vec(cards));
     assert_eq!(
         code.unwrap(),
         "CEBAIAIFB4WDANQIAEAQGDAUDAQSIJZUAIAQCBIFAEAQCBAA"
@@ -72,9 +71,9 @@ fn encode_decode_recommended() {
     }
 
     for (i, _deck) in decks.iter().enumerate() {
-        assert_eq!(Encoder::code_from_deck(&decks[i]).unwrap(), codes[i]);
+        assert_eq!(encoder::code_from_deck(&decks[i]).unwrap(), codes[i]);
         assert!(verify_rehydration(
-            &Encoder::deck_from_code(codes[i].to_string()).unwrap(),
+            &encoder::deck_from_code(codes[i].to_string()).unwrap(),
             &decks[i]
         ));
     }
@@ -84,8 +83,8 @@ fn encode_decode_recommended() {
 fn small_deck() {
     let deck = Deck::from_vec(vec![CardCodeAndCount::from_data("01DE002", 1).unwrap()]);
 
-    let code = Encoder::code_from_deck(&deck);
-    let decoded_deck = Encoder::deck_from_code(code.unwrap());
+    let code = encoder::code_from_deck(&deck);
+    let decoded_deck = encoder::deck_from_code(code.unwrap());
     assert_eq!(deck, decoded_deck.unwrap());
 }
 
@@ -114,8 +113,8 @@ fn large_deck() {
         CardCodeAndCount::from_data("01DE021", 3).unwrap(),
     ]);
 
-    let code = Encoder::code_from_deck(&deck);
-    let decoded_deck = Encoder::deck_from_code(code.unwrap());
+    let code = encoder::code_from_deck(&deck);
+    let decoded_deck = encoder::deck_from_code(code.unwrap());
     assert!(verify_rehydration(&deck, &decoded_deck.unwrap()));
 }
 
@@ -123,8 +122,8 @@ fn large_deck() {
 fn deck_with_counts_more_than_3_small() {
     let deck = Deck::from_vec(vec![CardCodeAndCount::from_data("01DE002", 4).unwrap()]);
 
-    let code = Encoder::code_from_deck(&deck);
-    let decoded_deck = Encoder::deck_from_code(code.unwrap());
+    let code = encoder::code_from_deck(&deck);
+    let decoded_deck = encoder::deck_from_code(code.unwrap());
     assert!(verify_rehydration(&deck, &decoded_deck.unwrap()));
 }
 
@@ -153,8 +152,8 @@ fn deck_with_more_than_3_large() {
         CardCodeAndCount::from_data("01DE021", 3).unwrap(),
     ]);
 
-    let code = Encoder::code_from_deck(&deck);
-    let decoded_deck = Encoder::deck_from_code(code.unwrap());
+    let code = encoder::code_from_deck(&deck);
+    let decoded_deck = encoder::deck_from_code(code.unwrap());
     assert!(verify_rehydration(&deck, &decoded_deck.unwrap()));
 }
 
@@ -162,8 +161,8 @@ fn deck_with_more_than_3_large() {
 fn single_card_40_times() {
     let deck = Deck::from_vec(vec![CardCodeAndCount::from_data("01DE002", 40).unwrap()]);
 
-    let code = Encoder::code_from_deck(&deck);
-    let decoded_deck = Encoder::deck_from_code(code.unwrap());
+    let code = encoder::code_from_deck(&deck);
+    let decoded_deck = encoder::deck_from_code(code.unwrap());
     assert!(verify_rehydration(&deck, &decoded_deck.unwrap()));
 }
 
@@ -192,8 +191,8 @@ fn worst_case_length() {
         CardCodeAndCount::from_data("01DE021", 4).unwrap(),
     ]);
 
-    let code = Encoder::code_from_deck(&deck);
-    let decoded_deck = Encoder::deck_from_code(code.unwrap());
+    let code = encoder::code_from_deck(&deck);
+    let decoded_deck = encoder::deck_from_code(code.unwrap());
     assert!(verify_rehydration(&deck, &decoded_deck.unwrap()));
 }
 
@@ -212,8 +211,8 @@ fn order_should_not_matter_1() {
     ]);
 
     assert_eq!(
-        Encoder::code_from_deck(&deck1).unwrap(),
-        Encoder::code_from_deck(&deck2).unwrap()
+        encoder::code_from_deck(&deck1).unwrap(),
+        encoder::code_from_deck(&deck2).unwrap()
     );
 
     let deck3 = Deck::from_vec(vec![
@@ -229,8 +228,8 @@ fn order_should_not_matter_1() {
     ]);
 
     assert_eq!(
-        Encoder::code_from_deck(&deck3).unwrap(),
-        Encoder::code_from_deck(&deck4).unwrap()
+        encoder::code_from_deck(&deck3).unwrap(),
+        encoder::code_from_deck(&deck4).unwrap()
     );
 }
 
@@ -251,8 +250,8 @@ fn order_should_not_matter_2() {
     ]);
 
     assert_eq!(
-        Encoder::code_from_deck(&deck1).unwrap(),
-        Encoder::code_from_deck(&deck2).unwrap()
+        encoder::code_from_deck(&deck1).unwrap(),
+        encoder::code_from_deck(&deck2).unwrap()
     );
 }
 
@@ -275,9 +274,9 @@ fn garbage_decoding() {
     let bad_encoding32 = String::from("ABCDEFG");
     let bad_encoding_empty = String::from("");
 
-    assert!(Encoder::deck_from_code(bad_encoding_not_base32).is_err());
-    assert!(Encoder::deck_from_code(bad_encoding32).is_err());
-    assert!(Encoder::deck_from_code(bad_encoding_empty).is_err());
+    assert!(encoder::deck_from_code(bad_encoding_not_base32).is_err());
+    assert!(encoder::deck_from_code(bad_encoding32).is_err());
+    assert!(encoder::deck_from_code(bad_encoding_empty).is_err());
 }
 
 fn verify_rehydration(d: &Deck, other: &Deck) -> bool {

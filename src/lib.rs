@@ -11,9 +11,9 @@
 //! Obtain a deck from the provided code:
 //!
 //! ```
-//! use lordeckcodes::Encoder;
+//! use lordeckcodes::encoder;
 //!
-//! let deck = Encoder::deck_from_code(
+//! let deck = encoder::deck_from_code(
 //!     String::from("CEBAEAIBAQTQMAIAAILSQLBNGUBACAIBFYDACAAHBEHR2IBLAEBACAIFAY")
 //! );
 //! assert!(deck.is_ok());
@@ -21,9 +21,7 @@
 //!
 //! Generate a code from the provided deck:
 //! ```
-//! use lordeckcodes::Encoder;
-//! use lordeckcodes::CardCodeAndCount;
-//! use lordeckcodes::Deck;
+//! use lordeckcodes::{CardCodeAndCount, Deck, encoder};
 //!
 //! let deck = Deck::from_vec(vec![
 //!     CardCodeAndCount::from_data("01SI015", 3).unwrap(),
@@ -42,7 +40,7 @@
 //!     CardCodeAndCount::from_data("01FR004", 2).unwrap(),
 //! ]);
 //!
-//! let code = Encoder::code_from_deck(&deck);
+//! let code = encoder::code_from_deck(&deck);
 //! assert!(code.is_ok());
 //! ```
 
@@ -51,10 +49,11 @@ extern crate lazy_static;
 
 mod card;
 mod deck;
-mod encoder;
 mod error;
 
-pub use self::encoder::Encoder;
+/// Provides encode and decode API calls.
+pub mod encoder;
+
 pub use self::deck::Deck;
 pub use self::card::CardCodeAndCount;
 
