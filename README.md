@@ -20,7 +20,7 @@ To use `lordeckcodes`, add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-lordeckcodes = "0.2"
+lordeckcodes = "0.3"
 ```
 
 ## Serde support
@@ -29,7 +29,7 @@ Serde support is optional and disabled by default. To enable use the feature `se
 
 ```toml
 [dependencies]
-lordeckcodes = { version = "0.2", features = ["serde"] }
+lordeckcodes = { version = "0.3", features = ["serde"] }
 ```
 
 ## Examples
