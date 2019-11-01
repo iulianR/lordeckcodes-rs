@@ -105,7 +105,7 @@ pub fn code_from_deck(deck: &Deck) -> Result<String, LorError> {
     let mut ofn = vec![];
 
     for card_code in deck.cards() {
-        match card_code.count {
+        match card_code.count() {
             3 => of3.push(card_code.clone()),
             2 => of2.push(card_code.clone()),
             1 => of1.push(card_code.clone()),
@@ -122,7 +122,7 @@ pub fn code_from_deck(deck: &Deck) -> Result<String, LorError> {
     sort_group(&mut grouped_of2);
     sort_group(&mut grouped_of1);
 
-    ofn.sort_by_key(|x| x.count);
+    ofn.sort_by_key(|x| x.count());
 
     bytes.extend(encode_group(&grouped_of3)?);
     bytes.extend(encode_group(&grouped_of2)?);
@@ -137,16 +137,16 @@ fn group_by_set_and_faction(cards: &mut Vec<CardCodeAndCount>) -> Vec<Vec<CardCo
 
     while !cards.is_empty() {
         let ref_card_count = cards.remove(0);
-        let ref_card = &ref_card_count.card;
+        let ref_card = ref_card_count.card();
 
         let mut current_set = vec![];
         for card_count in cards.iter_mut() {
-            if card_count.card.set == ref_card.set && card_count.card.faction == ref_card.faction {
+            if card_count.card().set() == ref_card.set() && card_count.card().faction() == ref_card.faction() {
                 current_set.push(card_count.clone());
             }
         }
 
-        cards.retain(|x| !(x.card.set == ref_card.set && x.card.faction == ref_card.faction));
+        cards.retain(|x| !(x.card().set() == ref_card.set() && x.card().faction() == ref_card.faction()));
 
         current_set.push(ref_card_count);
 
@@ -160,7 +160,7 @@ fn sort_group(group: &mut Vec<Vec<CardCodeAndCount>>) {
     group.sort_by_key(|x| x.len());
 
     for cards in group {
-        cards.sort_by_key(|x| x.card.number);
+        cards.sort_by_key(|x| x.card().number());
     }
 }
 
@@ -172,12 +172,12 @@ fn encode_group(group: &[Vec<CardCodeAndCount>]) -> Result<Vec<u8>, LorError> {
     for cards in group {
         cursor.write_unsigned_varint_32(cards.len() as u32)?;
 
-        let ref_card = &cards.first().unwrap().card;
-        cursor.write_unsigned_varint_32(ref_card.set)?;
-        cursor.write_unsigned_varint_32(ref_card.faction)?;
+        let ref_card = &cards.first().unwrap().card();
+        cursor.write_unsigned_varint_32(ref_card.set())?;
+        cursor.write_unsigned_varint_32(ref_card.faction())?;
 
         for card_count in cards {
-            cursor.write_unsigned_varint_32(card_count.card.number)?;
+            cursor.write_unsigned_varint_32(card_count.card().number())?;
         }
     }
 
@@ -189,10 +189,10 @@ fn encode_rest(group: &[CardCodeAndCount]) -> Result<Vec<u8>, LorError> {
     let mut cursor = Cursor::new(bytes);
 
     for card_count in group {
-        cursor.write_unsigned_varint_32(card_count.count as u32)?;
-        cursor.write_unsigned_varint_32(card_count.card.set)?;
-        cursor.write_unsigned_varint_32(card_count.card.faction)?;
-        cursor.write_unsigned_varint_32(card_count.card.number)?;
+        cursor.write_unsigned_varint_32(card_count.count() as u32)?;
+        cursor.write_unsigned_varint_32(card_count.card().set())?;
+        cursor.write_unsigned_varint_32(card_count.card().faction())?;
+        cursor.write_unsigned_varint_32(card_count.card().number())?;
     }
 
     Ok(cursor.into_inner())

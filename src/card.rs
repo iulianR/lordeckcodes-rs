@@ -20,9 +20,9 @@ lazy_static! {
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(PartialEq, Hash, Debug, Clone, Ord, PartialOrd, Eq)]
 pub struct Card {
-    pub(crate) set: u32,
-    pub(crate) faction: u32,
-    pub(crate) number: u32,
+    set: u32,
+    faction: u32,
+    number: u32,
 }
 
 impl Card {
@@ -46,14 +46,26 @@ impl Card {
             number: (&code[4..7]).parse()?,
         })
     }
+
+    pub fn set(&self) -> u32 {
+        self.set
+    }
+
+    pub fn faction(&self) -> u32 {
+        self.faction
+    }
+
+    pub fn number(&self) -> u32 {
+        self.number
+    }
 }
 
 /// Stores card-related information.
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, PartialEq, Hash, Clone, Ord, PartialOrd, Eq)]
 pub struct CardCodeAndCount {
-    pub(crate) card: Card,
-    pub(crate) count: i32,
+    card: Card,
+    count: i32,
 }
 
 impl CardCodeAndCount {
@@ -75,5 +87,13 @@ impl CardCodeAndCount {
             card: Card::from_code(code)?,
             count,
         })
+    }
+
+    pub fn card(&self) -> &Card {
+        &self.card
+    }
+
+    pub fn count(&self) -> i32 {
+        self.count
     }
 }
