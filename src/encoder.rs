@@ -141,12 +141,16 @@ fn group_by_set_and_faction(cards: &mut Vec<CardCodeAndCount>) -> Vec<Vec<CardCo
 
         let mut current_set = vec![];
         for card_count in cards.iter_mut() {
-            if card_count.card().set() == ref_card.set() && card_count.card().faction() == ref_card.faction() {
+            if card_count.card().set() == ref_card.set()
+                && card_count.card().faction() == ref_card.faction()
+            {
                 current_set.push(card_count.clone());
             }
         }
 
-        cards.retain(|x| !(x.card().set() == ref_card.set() && x.card().faction() == ref_card.faction()));
+        cards.retain(|x| {
+            !(x.card().set() == ref_card.set() && x.card().faction() == ref_card.faction())
+        });
 
         current_set.push(ref_card_count);
 
