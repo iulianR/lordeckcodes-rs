@@ -56,3 +56,4 @@ pub mod encoder;
 
 pub use self::card::CardCodeAndCount;
 pub use self::deck::Deck;
+pub use self::error::LorError;

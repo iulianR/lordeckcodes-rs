@@ -1,9 +1,9 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-use lordeckcodes::Deck;
-use lordeckcodes::{encoder, CardCodeAndCount};
 use serde_json::Error;
+
+use lordeckcodes::{encoder, CardCodeAndCount, Deck, LorError};
 
 #[test]
 fn basic_decode_test() {
@@ -267,6 +267,11 @@ fn bad_card_codes() {
 fn bad_count() {
     assert!(CardCodeAndCount::from_data("01DE002", 0).is_err());
     assert!(CardCodeAndCount::from_data("01DE002", -1).is_err());
+
+    match CardCodeAndCount::from_data("01DE002", -1) {
+        Err(LorError::InvalidCard) => assert!(true),
+        _ => assert!(false),
+    }
 }
 
 #[test]
@@ -275,9 +280,14 @@ fn garbage_decoding() {
     let bad_encoding32 = String::from("ABCDEFG");
     let bad_encoding_empty = String::from("");
 
-    assert!(encoder::deck_from_code(bad_encoding_not_base32).is_err());
-    assert!(encoder::deck_from_code(bad_encoding32).is_err());
-    assert!(encoder::deck_from_code(bad_encoding_empty).is_err());
+    assert!(encoder::deck_from_code(&bad_encoding_not_base32).is_err());
+    assert!(encoder::deck_from_code(&bad_encoding32).is_err());
+    assert!(encoder::deck_from_code(&bad_encoding_empty).is_err());
+
+    match encoder::deck_from_code(&bad_encoding_empty) {
+        Err(LorError::InvalidCard) => assert!(true),
+        _ => assert!(false),
+    }
 }
 
 #[test]
