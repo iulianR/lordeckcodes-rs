@@ -9,13 +9,13 @@ use crate::error::LorError;
 /// [`CardCodeAndCount`]: struct.CardCodeAndCount.html
 ///
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Deck(Vec<CardCodeAndCount>);
 
 impl Deck {
     /// Create a new empty `Deck`.
-    pub fn new() -> Deck {
-        Deck { 0: vec![] }
+    pub fn new() -> Self {
+        Default::default()
     }
 
     /// Create a new `Deck` from a `Vec` of `CardCodeAndCount`.
@@ -42,7 +42,8 @@ impl Deck {
     /// Create and add a new `CardCodeAndCount` to the deck from the provided data.
     pub fn add_from_data(&mut self, code: &str, count: i32) -> Result<(), LorError> {
         let card = CardCodeAndCount::new(Card::from_code(code)?, count);
-        Ok(self.add(card))
+        self.add(card);
+        Ok(())
     }
 
     /// Obtain a reference to the list of `CardCodeAndCount`.

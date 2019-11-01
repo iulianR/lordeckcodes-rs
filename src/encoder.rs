@@ -164,7 +164,7 @@ fn sort_group(group: &mut Vec<Vec<CardCodeAndCount>>) {
     }
 }
 
-fn encode_group(group: &Vec<Vec<CardCodeAndCount>>) -> Result<Vec<u8>, LorError> {
+fn encode_group(group: &[Vec<CardCodeAndCount>]) -> Result<Vec<u8>, LorError> {
     let bytes = vec![];
     let mut cursor = Cursor::new(bytes);
     cursor.write_unsigned_varint_32(group.len() as u32)?;
@@ -184,7 +184,7 @@ fn encode_group(group: &Vec<Vec<CardCodeAndCount>>) -> Result<Vec<u8>, LorError>
     Ok(cursor.into_inner())
 }
 
-fn encode_rest(group: &Vec<CardCodeAndCount>) -> Result<Vec<u8>, LorError> {
+fn encode_rest(group: &[CardCodeAndCount]) -> Result<Vec<u8>, LorError> {
     let bytes = vec![];
     let mut cursor = Cursor::new(bytes);
 
