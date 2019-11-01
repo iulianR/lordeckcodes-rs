@@ -19,8 +19,11 @@ use crate::error::LorError;
 /// );
 /// assert!(deck.is_ok());
 /// ```
-pub fn deck_from_code(code: String) -> Result<Deck, LorError> {
-    let mut bytes = data_encoding::BASE32_NOPAD.decode(code.as_ref())?;
+pub fn deck_from_code<S>(code: S) -> Result<Deck, LorError>
+where
+    S: AsRef<str>,
+{
+    let mut bytes = data_encoding::BASE32_NOPAD.decode(code.as_ref().as_bytes())?;
 
     if bytes.is_empty() {
         return Err(LorError::InvalidCard);
