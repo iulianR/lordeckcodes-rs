@@ -9,7 +9,7 @@ use lordeckcodes::{encoder, CardCodeAndCount, Deck, LorError};
 #[test]
 fn basic_decode_test() {
     let deck = encoder::deck_from_code(String::from(
-        "CEBAEAIBAQTQMAIAAILSQLBNGUBACAIBFYDACAAHBEHR2IBLAEBACAIFAY",
+        "CIBAEAIBAQTQMAIAAILSQLBNGUBACAIBFYDACAAHBEHR2IBLAEBACAIFAY",
     ));
     assert!(deck.is_ok());
 }
@@ -35,7 +35,7 @@ fn basic_encode_test() {
     let code = encoder::code_from_deck(&Deck::from_vec(cards));
     assert_eq!(
         code.unwrap(),
-        "CEBAIAIFB4WDANQIAEAQGDAUDAQSIJZUAIAQCBIFAEAQCBAA"
+        "CIBAIAIFB4WDANQIAEAQGDAUDAQSIJZUAIAQCAIEAEAQKBIA"
     );
 }
 
@@ -277,9 +277,45 @@ fn bilgewater_set() {
 }
 
 #[test]
+fn mttargon_set() {
+    let deck = Deck::from_vec(vec![
+        CardCodeAndCount::from_data("01DE002", 4).unwrap(),
+        CardCodeAndCount::from_data("03MT003", 2).unwrap(),
+        CardCodeAndCount::from_data("03MT010", 3).unwrap(),
+        CardCodeAndCount::from_data("02BW004", 5).unwrap(),
+    ]);
+
+    let code = encoder::code_from_deck(&deck);
+    let decoded_deck = encoder::deck_from_code(code.unwrap());
+    assert!(verify_rehydration(&deck, &decoded_deck.unwrap()));
+}
+
+#[test]
+fn bad_version() -> Result<(), Box<dyn std::error::Error>> {
+    // make sure that a deck with an invalid version fails
+    let deck = Deck::from_vec(vec![
+        CardCodeAndCount::from_data("01DE002", 4).unwrap(),
+        CardCodeAndCount::from_data("01DE003", 2).unwrap(),
+        CardCodeAndCount::from_data("02DE003", 3).unwrap(),
+        CardCodeAndCount::from_data("01DE004", 5).unwrap(),
+    ]);
+
+    let mut bytes_from_deck =
+        data_encoding::BASE32_NOPAD.decode(encoder::code_from_deck(&deck).unwrap().as_bytes())?;
+    bytes_from_deck.remove(0);
+    bytes_from_deck.insert(0, 88u8);
+
+    let bad_version_code = data_encoding::BASE32_NOPAD.encode(&bytes_from_deck);
+    let bad_deck = encoder::deck_from_code(bad_version_code);
+    assert!(bad_deck.is_err());
+
+    Ok(())
+}
+
+#[test]
 fn bad_card_codes() {
     assert!(CardCodeAndCount::from_data("01DE02", 1).is_err());
-    assert!(CardCodeAndCount::from_data("01XX002", 1).is_err());
+    assert!(CardCodeAndCount::from_data("01YY002", 1).is_err());
     assert!(CardCodeAndCount::from_data("01DE002", 0).is_err());
 }
 
