@@ -263,6 +263,20 @@ fn order_should_not_matter_2() {
 }
 
 #[test]
+fn bilgewater_set() {
+    let deck = Deck::from_vec(vec![
+        CardCodeAndCount::from_data("01DE002", 4).unwrap(),
+        CardCodeAndCount::from_data("02BW003", 2).unwrap(),
+        CardCodeAndCount::from_data("02BW010", 3).unwrap(),
+        CardCodeAndCount::from_data("01DE004", 5).unwrap(),
+    ]);
+
+    let code = encoder::code_from_deck(&deck);
+    let decoded_deck = encoder::deck_from_code(code.unwrap());
+    assert!(verify_rehydration(&deck, &decoded_deck.unwrap()));
+}
+
+#[test]
 fn bad_card_codes() {
     assert!(CardCodeAndCount::from_data("01DE02", 1).is_err());
     assert!(CardCodeAndCount::from_data("01XX002", 1).is_err());

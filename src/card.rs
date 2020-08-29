@@ -13,6 +13,7 @@ lazy_static! {
         map.insert("NX", 3);
         map.insert("PZ", 4);
         map.insert("SI", 5);
+        map.insert("BW", 6);
         map
     };
 }

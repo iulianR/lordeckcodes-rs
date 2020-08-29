@@ -6,6 +6,9 @@ use crate::card::{Card, CardCodeAndCount};
 use crate::deck::Deck;
 use crate::error::LorError;
 
+const FORMAT: u8 = 1;
+const MAX_KNOWN_VERSION: u8 = 2;
+
 /// Creates a [`Deck`] from a provided code.
 ///
 /// [`Deck`]: struct.Deck.html
@@ -32,7 +35,7 @@ where
     let _format = bytes[0] >> 4;
     let version = bytes[0] & 0xF;
     bytes.remove(0);
-    if version > 1 {
+    if version > MAX_KNOWN_VERSION {
         return Err(LorError::Version);
     }
 
