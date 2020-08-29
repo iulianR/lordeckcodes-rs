@@ -1,5 +1,5 @@
 # Legends of Runeterra - Deck Encoder/Decoder
-Legends of Runeterra deck encoder/decoder in Rust. Port of [LorDeckCodes](https://github.com/RiotGames/LoRDeckCodes.).
+Legends of Runeterra deck encoder/decoder in Rust. Port of [LorDeckCodes](https://github.com/RiotGames/LoRDeckCodes).
 
 [![Actions Status](https://github.com/iulianR/lordeckcodes-rs/workflows/Rust/badge.svg)](https://github.com/iulianR/lordeckcodes-rs/actions)
 [![Crates.io][crates-badge]][crates-url]
