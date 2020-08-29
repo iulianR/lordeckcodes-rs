@@ -100,7 +100,8 @@ where
 /// ```
 pub fn code_from_deck(deck: &Deck) -> Result<String, LorError> {
     let mut bytes = vec![];
-    bytes.push(0b0001_0010u8); // format and version
+    // add format and version
+    bytes.push(FORMAT.wrapping_shl(4).wrapping_add(MAX_KNOWN_VERSION));
 
     let mut of3 = vec![];
     let mut of2 = vec![];
