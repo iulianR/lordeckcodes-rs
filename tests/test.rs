@@ -1,4 +1,5 @@
 use std::fs::File;
+use std::io::Read;
 use std::io::{BufRead, BufReader};
 
 use serde_json::Error;
@@ -39,7 +40,7 @@ fn basic_encode_test() {
 }
 
 #[test]
-fn encode_decode_recommended() {
+fn encode_decode_recommended() -> Result<(), Box<dyn std::error::Error>> {
     let f = File::open("tests/DeckCodesTestData.txt").unwrap();
     let mut f = BufReader::new(f);
 
@@ -47,27 +48,30 @@ fn encode_decode_recommended() {
     let mut decks = vec![];
 
     loop {
-        let mut line = String::new();
-        let res = f.read_line(&mut line);
-
-        if res.is_err() || res.unwrap() == 0 || line.is_empty() {
-            break;
-        }
-
-        codes.push(line.trim_end_matches("\n").to_string());
-
-        let mut deck = Deck::new();
-        loop {
-            let mut card_line = String::new();
-            let res = f.read_line(&mut card_line);
-            if res.is_err() || res.unwrap() == 0 || card_line == '\n'.to_string() {
+        match f.by_ref().lines().next() {
+            Some(code) => {
+                codes.push(code?);
+            }
+            None => {
                 break;
             }
-
-            let parts: Vec<&str> = card_line.trim_end_matches("\n").split(":").collect();
-            deck.add_from_data(parts[1], parts[0].parse().unwrap())
-                .unwrap();
         }
+
+        let deck = f
+            .by_ref()
+            .lines()
+            .map(|l| l.unwrap())
+            .take_while(|l| !l.is_empty())
+            .fold(Deck::new(), |mut deck, line| {
+                let mut parts = line.rsplit(":");
+                deck.add_from_data(
+                    parts.next().unwrap(),
+                    parts.next().unwrap().parse().unwrap(),
+                )
+                .unwrap();
+                deck
+            });
+
         decks.push(deck);
     }
 
@@ -78,6 +82,8 @@ fn encode_decode_recommended() {
             &decks[i]
         ));
     }
+
+    Ok(())
 }
 
 #[test]
