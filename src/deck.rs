@@ -3,11 +3,11 @@ use serde::{Deserialize, Serialize};
 
 use crate::card::{Card, CardCodeAndCount};
 use crate::error::LorError;
+use std::iter::FromIterator;
 
 /// Holds a set of [`CardCodeAndCount`].
 ///
 /// [`CardCodeAndCount`]: struct.CardCodeAndCount.html
-///
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Default)]
 pub struct Deck(Vec<CardCodeAndCount>);
@@ -22,7 +22,7 @@ impl Deck {
     ///
     /// # Examples
     /// ```
-    /// use lordeckcodes::{Deck, CardCodeAndCount};
+    /// use lordeckcodes::{CardCodeAndCount, Deck};
     /// let deck = Deck::from_vec(vec![
     ///     CardCodeAndCount::from_data("01SI015", 3).unwrap(),
     ///     CardCodeAndCount::from_data("01SI044", 3).unwrap(),
@@ -55,5 +55,14 @@ impl Deck {
 impl PartialEq for Deck {
     fn eq(&self, other: &Self) -> bool {
         self.0 == other.0
+    }
+}
+
+impl<'a> FromIterator<&'a (&'a str, i32)> for Deck {
+    fn from_iter<T: IntoIterator<Item = &'a (&'a str, i32)>>(iter: T) -> Self {
+        iter.into_iter().fold(Deck::new(), |mut deck, (card, code)| {
+            deck.add_from_data(card, *code).unwrap();
+            deck
+        })
     }
 }

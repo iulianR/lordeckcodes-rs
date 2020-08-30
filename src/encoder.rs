@@ -17,9 +17,8 @@ const MAX_KNOWN_VERSION: u8 = 2;
 /// ```
 /// use lordeckcodes::encoder;
 ///
-/// let deck = encoder::deck_from_code(
-///     String::from("CEBAEAIBAQTQMAIAAILSQLBNGUBACAIBFYDACAAHBEHR2IBLAEBACAIFAY")
-/// );
+/// let deck =
+///     encoder::deck_from_code("CEBAEAIBAQTQMAIAAILSQLBNGUBACAIBFYDACAAHBEHR2IBLAEBACAIFAY");
 /// assert!(deck.is_ok());
 /// ```
 pub fn deck_from_code<S>(code: S) -> Result<Deck, LorError>
@@ -76,27 +75,30 @@ where
 ///
 /// # Examples
 /// ```
-/// use lordeckcodes::{encoder, CardCodeAndCount, Deck};
+/// use lordeckcodes::{encoder, CardCodeAndCount, Deck, LorError};
 ///
-/// let deck = Deck::from_vec(vec![
-///     CardCodeAndCount::from_data("01SI015", 3).unwrap(),
-///     CardCodeAndCount::from_data("01SI044", 3).unwrap(),
-///     CardCodeAndCount::from_data("01SI048", 3).unwrap(),
-///     CardCodeAndCount::from_data("01SI054", 3).unwrap(),
-///     CardCodeAndCount::from_data("01FR003", 3).unwrap(),
-///     CardCodeAndCount::from_data("01FR012", 3).unwrap(),
-///     CardCodeAndCount::from_data("01FR020", 3).unwrap(),
-///     CardCodeAndCount::from_data("01FR024", 3).unwrap(),
-///     CardCodeAndCount::from_data("01FR033", 3).unwrap(),
-///     CardCodeAndCount::from_data("01FR036", 3).unwrap(),
-///     CardCodeAndCount::from_data("01FR039", 3).unwrap(),
-///     CardCodeAndCount::from_data("01FR052", 3).unwrap(),
-///     CardCodeAndCount::from_data("01SI005", 2).unwrap(),
-///     CardCodeAndCount::from_data("01FR004", 2).unwrap(),
-/// ]);
+/// fn main() -> Result<(), LorError> {
+///     let deck = Deck::from_vec(vec![
+///         CardCodeAndCount::from_data("01SI015", 3)?,
+///         CardCodeAndCount::from_data("01SI044", 3)?,
+///         CardCodeAndCount::from_data("01SI048", 3)?,
+///         CardCodeAndCount::from_data("01SI054", 3)?,
+///         CardCodeAndCount::from_data("01FR003", 3)?,
+///         CardCodeAndCount::from_data("01FR012", 3)?,
+///         CardCodeAndCount::from_data("01FR020", 3)?,
+///         CardCodeAndCount::from_data("01FR024", 3)?,
+///         CardCodeAndCount::from_data("01FR033", 3)?,
+///         CardCodeAndCount::from_data("01FR036", 3)?,
+///         CardCodeAndCount::from_data("01FR039", 3)?,
+///         CardCodeAndCount::from_data("01FR052", 3)?,
+///         CardCodeAndCount::from_data("01SI005", 2)?,
+///         CardCodeAndCount::from_data("01FR004", 2)?,
+///     ]);
 ///
-/// let code = encoder::code_from_deck(&deck);
-/// assert!(code.is_ok());
+///     let code = encoder::code_from_deck(&deck);
+///     assert!(code.is_ok());
+///     Ok(())
+/// }
 /// ```
 pub fn code_from_deck(deck: &Deck) -> Result<String, LorError> {
     let mut bytes = vec![];

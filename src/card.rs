@@ -75,7 +75,7 @@ impl CardCodeAndCount {
         CardCodeAndCount { card, count }
     }
 
-    /// Create a `CardCodeAndCount` from the provided data.
+    /// Create a `CardCodeAndCount` from the provided code and card count.
     pub fn from_data(code: &str, count: i32) -> Result<CardCodeAndCount, LorError> {
         if code.len() != 7 {
             return Err(LorError::InvalidCard);

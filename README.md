@@ -33,37 +33,39 @@ lordeckcodes = { version = "0.3", features = ["serde"] }
 ```
 
 ## Examples
- Obtain a deck from the provided code:
+Obtain a deck from the provided code:
 
- ```rust
- use lordeckcodes::encoder;
+```rust
+use lordeckcodes::encoder;
 
- let deck = encoder::deck_from_code(
-     String::from("CEBAEAIBAQTQMAIAAILSQLBNGUBACAIBFYDACAAHBEHR2IBLAEBACAIFAY")
- );
- assert!(deck.is_ok());
- ```
+let deck = encoder::deck_from_code("CEBAEAIBAQTQMAIAAILSQLBNGUBACAIBFYDACAAHBEHR2IBLAEBACAIFAY");
+assert!(deck.is_ok());
+```
 
- Generate a code from the provided deck:
- ```rust
-use lordeckcodes::{encoder, CardCodeAndCount, Deck};
-
-let deck = Deck::from_vec(vec![
-    CardCodeAndCount::from_data("01SI015", 3).unwrap(),
-    CardCodeAndCount::from_data("01SI044", 3).unwrap(),
-    CardCodeAndCount::from_data("01SI048", 3).unwrap(),
-    CardCodeAndCount::from_data("01SI054", 3).unwrap(),
-    CardCodeAndCount::from_data("01FR003", 3).unwrap(),
-    CardCodeAndCount::from_data("01FR012", 3).unwrap(),
-    CardCodeAndCount::from_data("01FR020", 3).unwrap(),
-    CardCodeAndCount::from_data("01FR024", 3).unwrap(),
-    CardCodeAndCount::from_data("01FR033", 3).unwrap(),
-    CardCodeAndCount::from_data("01FR036", 3).unwrap(),
-    CardCodeAndCount::from_data("01FR039", 3).unwrap(),
-    CardCodeAndCount::from_data("01FR052", 3).unwrap(),
-    CardCodeAndCount::from_data("01SI005", 2).unwrap(),
-    CardCodeAndCount::from_data("01FR004", 2).unwrap(),
-]);
-let code = encoder::code_from_deck(&deck);
-assert!(code.is_ok());
- ```
+Generate a code from the provided deck:
+```rust
+use lordeckcodes::{encoder, CardCodeAndCount, Deck, LorError};
+fn main() -> Result<(), LorError> {
+    let deck: Deck = [
+        ("01SI015", 3),
+        ("01SI044", 3),
+        ("01SI048", 3),
+        ("01SI054", 3),
+        ("01FR003", 3),
+        ("01FR012", 3),
+        ("01FR020", 3),
+        ("01FR024", 3),
+        ("01FR033", 3),
+        ("01FR036", 3),
+        ("01FR039", 3),
+        ("01FR052", 3),
+        ("01SI005", 2),
+        ("01FR004", 2),
+    ]
+    .iter()
+    .collect();
+    let code = encoder::code_from_deck(&deck);
+    assert!(code.is_ok());
+    Ok(())
+}
+```
