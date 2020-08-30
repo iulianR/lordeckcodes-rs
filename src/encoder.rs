@@ -173,9 +173,9 @@ fn sort_group(group: &mut Vec<Vec<CardCodeAndCount>>) {
         }
     });
 
-    for cards in group {
-        cards.sort_by_key(|x| x.card().number());
-    }
+    group
+        .into_iter()
+        .for_each(|cards| cards.sort_by_key(|x| x.card().number()));
 }
 
 fn encode_group(group: &[Vec<CardCodeAndCount>]) -> Result<Vec<u8>, LorError> {
