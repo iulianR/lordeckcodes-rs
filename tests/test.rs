@@ -38,7 +38,7 @@ fn basic_encode_test() {
     let code = encoder::code_from_deck(&deck);
     assert_eq!(
         code.unwrap(),
-        "CIBAIAIFB4WDANQIAEAQGDAUDAQSIJZUAIAQCAIEAEAQKBIA"
+        "CMBAIAIFB4WDANQIAEAQGDAUDAQSIJZUAIAQCAIEAEAQKBIA"
     );
 }
 
@@ -272,6 +272,21 @@ fn bilgewater_set() {
         CardCodeAndCount::from_data("02BW003", 2).unwrap(),
         CardCodeAndCount::from_data("02BW010", 3).unwrap(),
         CardCodeAndCount::from_data("01DE004", 5).unwrap(),
+    ]);
+
+    let code = encoder::code_from_deck(&deck);
+    let decoded_deck = encoder::deck_from_code(code.unwrap());
+    assert!(verify_rehydration(&deck, &decoded_deck.unwrap()));
+}
+
+#[test]
+fn shurima_set()
+{
+    let deck = Deck::from_vec(vec![
+        CardCodeAndCount::from_data("01DE002", 4).unwrap(),
+        CardCodeAndCount::from_data("02BW003", 2).unwrap(),
+        CardCodeAndCount::from_data("02BW010", 3).unwrap(),
+        CardCodeAndCount::from_data("04SH047", 5).unwrap(),
     ]);
 
     let code = encoder::code_from_deck(&deck);

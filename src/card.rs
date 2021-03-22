@@ -14,6 +14,7 @@ lazy_static! {
         map.insert("PZ", 4);
         map.insert("SI", 5);
         map.insert("BW", 6);
+        map.insert("SH", 7);
         map.insert("MT", 9);
         map
     };
