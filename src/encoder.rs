@@ -1,6 +1,6 @@
 use std::io::Cursor;
 
-use varint::{VarintRead, VarintWrite};
+use varint_rs::{VarintReader, VarintWriter};
 
 use crate::card::{Card, CardCodeAndCount};
 use crate::deck::Deck;
@@ -41,15 +41,15 @@ where
     let mut cards = vec![];
     let mut cursor = Cursor::new(bytes);
     for i in (1..=3).rev() {
-        let num_groups = cursor.read_unsigned_varint_32()?;
+        let num_groups = cursor.read_u32_varint()?;
 
         for _j in 0..num_groups {
-            let num_this_group = cursor.read_unsigned_varint_32()?;
-            let set = cursor.read_unsigned_varint_32()?;
-            let faction = cursor.read_unsigned_varint_32()?;
+            let num_this_group = cursor.read_u32_varint()?;
+            let set = cursor.read_u32_varint()?;
+            let faction = cursor.read_u32_varint()?;
 
             for _k in 0..num_this_group {
-                let card_num = cursor.read_unsigned_varint_32()?;
+                let card_num = cursor.read_u32_varint()?;
                 let card_count = CardCodeAndCount::new(Card::new(set, faction, card_num), i);
                 cards.push(card_count);
             }
@@ -57,10 +57,10 @@ where
     }
 
     while cursor.position() < cursor.get_ref().len() as u64 {
-        let count = cursor.read_unsigned_varint_32()?;
-        let set = cursor.read_unsigned_varint_32()?;
-        let faction = cursor.read_unsigned_varint_32()?;
-        let number = cursor.read_unsigned_varint_32()?;
+        let count = cursor.read_u32_varint()?;
+        let set = cursor.read_u32_varint()?;
+        let faction = cursor.read_u32_varint()?;
+        let number = cursor.read_u32_varint()?;
 
         let card_count = CardCodeAndCount::new(Card::new(set, faction, number), count as i32);
         cards.push(card_count);
@@ -183,17 +183,17 @@ fn sort_group(group: &mut Vec<Vec<CardCodeAndCount>>) {
 fn encode_group(group: &[Vec<CardCodeAndCount>]) -> Result<Vec<u8>, LorError> {
     let bytes = vec![];
     let mut cursor = Cursor::new(bytes);
-    cursor.write_unsigned_varint_32(group.len() as u32)?;
+    cursor.write_u32_varint(group.len() as u32)?;
 
     for cards in group {
-        cursor.write_unsigned_varint_32(cards.len() as u32)?;
+        cursor.write_u32_varint(cards.len() as u32)?;
 
         let ref_card = &cards.first().unwrap().card();
-        cursor.write_unsigned_varint_32(ref_card.set())?;
-        cursor.write_unsigned_varint_32(ref_card.faction())?;
+        cursor.write_u32_varint(ref_card.set())?;
+        cursor.write_u32_varint(ref_card.faction())?;
 
         for card_count in cards {
-            cursor.write_unsigned_varint_32(card_count.card().number())?;
+            cursor.write_u32_varint(card_count.card().number())?;
         }
     }
 
@@ -205,10 +205,10 @@ fn encode_rest(group: &[CardCodeAndCount]) -> Result<Vec<u8>, LorError> {
     let mut cursor = Cursor::new(bytes);
 
     for card_count in group {
-        cursor.write_unsigned_varint_32(card_count.count() as u32)?;
-        cursor.write_unsigned_varint_32(card_count.card().set())?;
-        cursor.write_unsigned_varint_32(card_count.card().faction())?;
-        cursor.write_unsigned_varint_32(card_count.card().number())?;
+        cursor.write_u32_varint(card_count.count() as u32)?;
+        cursor.write_u32_varint(card_count.card().set())?;
+        cursor.write_u32_varint(card_count.card().faction())?;
+        cursor.write_u32_varint(card_count.card().number())?;
     }
 
     Ok(cursor.into_inner())
