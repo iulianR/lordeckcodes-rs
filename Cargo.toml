@@ -19,7 +19,6 @@ default = ["serde"]
 
 [dependencies]
 data-encoding = "2.3"
-varint = "0.9"
 lazy_static = "1.4"
 thiserror = "1.0"
 varint-rs = "2.2"
