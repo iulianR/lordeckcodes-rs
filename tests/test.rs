@@ -6,8 +6,8 @@ use std::collections::HashMap;
 
 use serde_json::Error;
 
-use lordeckcodes::{encoder, CardCodeAndCount, Deck, LorError};
 use lordeckcodes::encoder::deck_from_code;
+use lordeckcodes::{encoder, CardCodeAndCount, Deck, LorError};
 
 #[test]
 fn basic_decode_test() {
@@ -69,7 +69,7 @@ fn encode_decode_recommended() -> Result<(), Box<dyn std::error::Error>> {
             .map(|l| l.unwrap())
             .take_while(|l| !l.is_empty())
             .fold(Deck::new(), |mut deck, line| {
-                let mut parts = line.rsplit(":");
+                let mut parts = line.rsplit(':');
                 deck.add_from_data(
                     parts.next().unwrap(),
                     parts.next().unwrap().parse().unwrap(),
@@ -84,7 +84,7 @@ fn encode_decode_recommended() -> Result<(), Box<dyn std::error::Error>> {
     for (i, _deck) in decks.iter().enumerate() {
         assert_eq!(encoder::code_from_deck(&decks[i]).unwrap(), codes[i]);
         assert!(verify_rehydration(
-            &encoder::deck_from_code(codes[i].to_string()).unwrap(),
+            &encoder::deck_from_code(&codes[i]).unwrap(),
             &decks[i],
         ));
     }
@@ -464,5 +464,5 @@ fn verify_rehydration(d: &Deck, other: &Deck) -> bool {
         }
     }
 
-    return true;
+    true
 }

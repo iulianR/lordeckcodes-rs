@@ -114,13 +114,10 @@ pub fn code_from_deck(deck: &Deck) -> Result<String, LorError> {
         }
     }
 
-    let mut bytes = vec![];
     // add format and version
-    bytes.push(
-        FORMAT
-            .wrapping_shl(4)
-            .wrapping_add(get_min_supported_library_version(deck)),
-    );
+    let mut bytes = vec![FORMAT
+        .wrapping_shl(4)
+        .wrapping_add(get_min_supported_library_version(deck))];
 
     let mut of3 = vec![];
     let mut of2 = vec![];
@@ -183,17 +180,17 @@ fn group_by_set_and_faction(cards: &mut Vec<CardCodeAndCount>) -> Vec<Vec<CardCo
     result
 }
 
-fn sort_group(group: &mut Vec<Vec<CardCodeAndCount>>) {
+fn sort_group(group: &mut [Vec<CardCodeAndCount>]) {
     group.sort_by(|a, b| {
         let ordering = a.len().cmp(&b.len());
         match ordering {
-            std::cmp::Ordering::Equal => a[0].card().cmp(&b[0].card()),
+            std::cmp::Ordering::Equal => a[0].card().cmp(b[0].card()),
             _ => ordering,
         }
     });
 
     group
-        .into_iter()
+        .iter_mut()
         .for_each(|cards| cards.sort_by_key(|x| x.card().number()));
 }
 

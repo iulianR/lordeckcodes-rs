@@ -31,7 +31,7 @@ impl Deck {
     /// ]);
     /// ```
     pub fn from_vec(vec: Vec<CardCodeAndCount>) -> Deck {
-        Deck { 0: vec }
+        Deck(vec)
     }
 
     /// Add a `CardCodeAndCount` to the `Deck`.
