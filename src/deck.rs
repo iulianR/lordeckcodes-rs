@@ -60,9 +60,10 @@ impl PartialEq for Deck {
 
 impl<'a> FromIterator<&'a (&'a str, i32)> for Deck {
     fn from_iter<T: IntoIterator<Item = &'a (&'a str, i32)>>(iter: T) -> Self {
-        iter.into_iter().fold(Deck::new(), |mut deck, (card, code)| {
-            deck.add_from_data(card, *code).unwrap();
-            deck
-        })
+        iter.into_iter()
+            .fold(Deck::new(), |mut deck, (card, code)| {
+                deck.add_from_data(card, *code).unwrap();
+                deck
+            })
     }
 }

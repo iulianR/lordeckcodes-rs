@@ -7,7 +7,8 @@ use crate::deck::Deck;
 use crate::error::LorError;
 
 const FORMAT: u8 = 1;
-const MAX_KNOWN_VERSION: u8 = 3;
+pub(crate) const MAX_KNOWN_VERSION: u8 = 4;
+const INITIAL_VERSION: u8 = 1;
 
 /// Creates a [`Deck`] from a provided code.
 ///
@@ -101,9 +102,25 @@ where
 /// }
 /// ```
 pub fn code_from_deck(deck: &Deck) -> Result<String, LorError> {
+    fn get_min_supported_library_version(deck: &Deck) -> u8 {
+        if deck.cards().is_empty() {
+            INITIAL_VERSION
+        } else {
+            deck.cards()
+                .iter()
+                .map(|c| c.card().get_version())
+                .max()
+                .unwrap()
+        }
+    }
+
     let mut bytes = vec![];
     // add format and version
-    bytes.push(FORMAT.wrapping_shl(4).wrapping_add(MAX_KNOWN_VERSION));
+    bytes.push(
+        FORMAT
+            .wrapping_shl(4)
+            .wrapping_add(get_min_supported_library_version(deck)),
+    );
 
     let mut of3 = vec![];
     let mut of2 = vec![];

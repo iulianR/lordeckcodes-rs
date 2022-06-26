@@ -1,6 +1,7 @@
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
+use crate::encoder::MAX_KNOWN_VERSION;
 use crate::error::LorError;
 use std::collections::HashMap;
 
@@ -16,6 +17,24 @@ lazy_static! {
         map.insert("BW", 6);
         map.insert("SH", 7);
         map.insert("MT", 9);
+        map.insert("BC", 10);
+        map
+    };
+}
+
+lazy_static! {
+    static ref FACTION_NUMBER_TO_VERSION: HashMap<u32, u8> = {
+        let mut map = HashMap::new();
+        map.insert(0, 1);
+        map.insert(1, 1);
+        map.insert(2, 1);
+        map.insert(3, 1);
+        map.insert(4, 1);
+        map.insert(5, 1);
+        map.insert(6, 2);
+        map.insert(9, 2);
+        map.insert(7, 3);
+        map.insert(10, 4);
         map
     };
 }
@@ -48,6 +67,16 @@ impl Card {
             faction: *faction.unwrap(),
             number: (&code[4..7]).parse()?,
         })
+    }
+
+    pub(crate) fn get_version(&self) -> u8 {
+        let version = FACTION_NUMBER_TO_VERSION.get(&self.faction);
+
+        if let Some(v) = version {
+            *v
+        } else {
+            MAX_KNOWN_VERSION
+        }
     }
 
     pub fn set(&self) -> u32 {
