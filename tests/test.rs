@@ -2,9 +2,12 @@ use std::fs::File;
 use std::io::Read;
 use std::io::{BufRead, BufReader};
 
+use std::collections::HashMap;
+
 use serde_json::Error;
 
 use lordeckcodes::{encoder, CardCodeAndCount, Deck, LorError};
+use lordeckcodes::encoder::deck_from_code;
 
 #[test]
 fn basic_decode_test() {
@@ -82,7 +85,7 @@ fn encode_decode_recommended() -> Result<(), Box<dyn std::error::Error>> {
         assert_eq!(encoder::code_from_deck(&decks[i]).unwrap(), codes[i]);
         assert!(verify_rehydration(
             &encoder::deck_from_code(codes[i].to_string()).unwrap(),
-            &decks[i]
+            &decks[i],
         ));
     }
 
@@ -308,6 +311,20 @@ fn mttargon_set() {
 }
 
 #[test]
+fn runeterra_set() {
+    let deck = Deck::from_vec(vec![
+        CardCodeAndCount::from_data("01DE002", 4).unwrap(),
+        CardCodeAndCount::from_data("03MT003", 2).unwrap(),
+        CardCodeAndCount::from_data("03MT010", 3).unwrap(),
+        CardCodeAndCount::from_data("01RU001", 5).unwrap(),
+    ]);
+
+    let code = encoder::code_from_deck(&deck);
+    let decoded_deck = encoder::deck_from_code(code.unwrap());
+    assert!(verify_rehydration(&deck, &decoded_deck.unwrap()));
+}
+
+#[test]
 fn bad_version() -> Result<(), Box<dyn std::error::Error>> {
     // make sure that a deck with an invalid version fails
     let deck = Deck::from_vec(vec![
@@ -361,6 +378,48 @@ fn garbage_decoding() {
         Err(LorError::InvalidCard) => assert!(true),
         _ => assert!(false),
     }
+}
+
+#[test]
+fn deck_version_is_the_minimum_library_version_that_supports_the_contained_factions() {
+    fn extract_version_from_deck_code(code: &str) -> u8 {
+        let bytes = data_encoding::BASE32_NOPAD.decode(code.as_bytes()).unwrap();
+        bytes[0] & 0xF
+    }
+
+    let faction_number_to_version: HashMap<&'static str, u8> = {
+        let mut map = HashMap::new();
+        map.insert("DE", 1);
+        map.insert("FR", 1);
+        map.insert("IO", 1);
+        map.insert("NX", 1);
+        map.insert("PZ", 1);
+        map.insert("SI", 1);
+        map.insert("BW", 2);
+        map.insert("MT", 2);
+        map.insert("SH", 3);
+        map.insert("BC", 4);
+        map
+    };
+
+    for (&faction, &version) in faction_number_to_version.iter() {
+        let deck = Deck::from_vec(vec![
+            CardCodeAndCount::from_data("01DE001", 1).unwrap(),
+            CardCodeAndCount::from_data(format!("01{faction}002").as_str(), 1).unwrap(),
+            CardCodeAndCount::from_data("01FR001", 1).unwrap(),
+        ]);
+
+        let deck_code = encoder::code_from_deck(&deck).unwrap();
+
+        let min_supported_library_version = extract_version_from_deck_code(&deck_code);
+        assert_eq!(version, min_supported_library_version);
+    }
+}
+
+#[test]
+fn argument_exception_on_future_version() {
+    let single_card_deck_with_version_10 = "DEAAABABAEFACAIBAAAQCAIFAEAQGCTP";
+    assert!(deck_from_code(&single_card_deck_with_version_10).is_err());
 }
 
 #[test]
