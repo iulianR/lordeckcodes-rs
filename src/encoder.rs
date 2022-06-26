@@ -7,7 +7,7 @@ use crate::deck::Deck;
 use crate::error::LorError;
 
 const FORMAT: u8 = 1;
-pub(crate) const MAX_KNOWN_VERSION: u8 = 4;
+pub(crate) const MAX_KNOWN_VERSION: u8 = 5;
 const INITIAL_VERSION: u8 = 1;
 
 /// Creates a [`Deck`] from a provided code.

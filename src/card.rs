@@ -18,6 +18,7 @@ lazy_static! {
         map.insert("SH", 7);
         map.insert("MT", 9);
         map.insert("BC", 10);
+        map.insert("RU", 12);
         map
     };
 }
@@ -35,6 +36,7 @@ lazy_static! {
         map.insert(9, 2);
         map.insert(7, 3);
         map.insert(10, 4);
+        map.insert(12, 5);
         map
     };
 }
