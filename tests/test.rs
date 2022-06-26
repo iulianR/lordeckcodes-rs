@@ -38,7 +38,7 @@ fn basic_encode_test() {
     let code = encoder::code_from_deck(&deck);
     assert_eq!(
         code.unwrap(),
-        "CMBAIAIFB4WDANQIAEAQGDAUDAQSIJZUAIAQCAIEAEAQKBIA"
+        "CEBAIAIFB4WDANQIAEAQGDAUDAQSIJZUAIAQCAIEAEAQKBIA"
     );
 }
 
@@ -280,8 +280,7 @@ fn bilgewater_set() {
 }
 
 #[test]
-fn shurima_set()
-{
+fn shurima_set() {
     let deck = Deck::from_vec(vec![
         CardCodeAndCount::from_data("01DE002", 4).unwrap(),
         CardCodeAndCount::from_data("02BW003", 2).unwrap(),
